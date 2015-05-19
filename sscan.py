@@ -96,7 +96,7 @@ class sscan:
             body = result.read()
             if result.code in(300, 301, 302, 303, 307):
                 f.write(str(result.code) + '[CUSTOM]' + url + '\n')
-            elif '404' in body or '找不到' in body or '不存在' in body:
+            elif '404' in body or '找不到' in body or '不存在' in body or '抱歉' in body or '再试' in body:
                 f.write(str(404) + '[CUSTOM]' + url + '\n')
             else:
                 f.write(str(result.getcode()) + url + '\n')

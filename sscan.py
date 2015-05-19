@@ -84,7 +84,8 @@ class sscan:
             print e
         else:
             # Body is have 404
-            if '404' in result.read():
+            body = result.read()
+            if '404' in body or '找不到' in body or '不存在' in body:
                 f.write(str(404) + '[CUSTOM]' + url + '\n')
             else:
                 f.write(str(result.getcode()) + url + '\n')

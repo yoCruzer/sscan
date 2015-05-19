@@ -11,7 +11,6 @@ import re
 import urllib
 import urllib2
 
-
 class sscan:
     startTime = time.time()
     rules = [
@@ -61,7 +60,6 @@ class sscan:
                 self.scan(url)
 
     def scan(self, url):
-        urls = []
         if url[len(url) - 1] == '/':
             url = url[:len(url) - 1]
         print 'TEST:' + url
@@ -72,28 +70,40 @@ class sscan:
     def get(self, url):
         f = open('/tmp/.tmp', 'w')
         try:
+            class NoRedirectHandler(urllib2.HTTPRedirectHandler):
+                def http_error_302(self, req, fp, code, msg, headers):
+                    infourl = urllib.addinfourl(fp, headers, req.get_full_url())
+                    infourl.status = code
+                    infourl.code = code
+                    return infourl
+                http_error_300 = http_error_302
+                http_error_301 = http_error_302
+                http_error_303 = http_error_302
+                http_error_307 = http_error_302
+
+            opener = urllib2.build_opener(NoRedirectHandler())
+            urllib2.install_opener(opener)
             req = urllib2.Request(url, None, self.headers)
             result = urllib2.urlopen(req, timeout=3)
         except urllib2.HTTPError as e:
             f.write(str(e.code) + '[ORIGIN]' + url + '\n')
         except urllib2.URLError as e:
             print e.reason
-        except socket.error as e:
-            print e
         except Exception as e:
             print e
         else:
             # Body is have 404
             body = result.read()
-            if '404' in body or '找不到' in body or '不存在' in body:
+            if result.code in(300, 301, 302, 303, 307):
+                f.write(str(result.code) + '[CUSTOM]' + url + '\n')
+            elif '404' in body or '找不到' in body or '不存在' in body:
                 f.write(str(404) + '[CUSTOM]' + url + '\n')
             else:
                 f.write(str(result.getcode()) + url + '\n')
                 print str(result.getcode()) + url
         f.close()
 
-
 sscan = sscan()
-sscan.dict()
-# sscan.scan('http://www.xnwgj.gov.cn/bbs/')
+# sscan.dict()
+sscan.scan('http://www.xiaomi.cn')
 # sscan.search()

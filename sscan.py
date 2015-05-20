@@ -100,7 +100,7 @@ class sscan:
             req = urllib2.Request(url, None, self.headers)
             result = urllib2.urlopen(req, timeout=3)
         except urllib2.HTTPError as e:
-            f.write(str(e.code) + '[ORIGIN]' + url + '\n')
+            msg = str(e.code) + '[ORIGIN]'
         except urllib2.URLError as e:
             print e.reason
         except Exception as e:
@@ -119,14 +119,15 @@ class sscan:
             elif result.code in (300, 301, 302, 303, 307):
                 msg = str(result.code) + '[CUSTOM]'
             else:
-                msg = str(result.getcode())
-            msg = msg + url + '\n'
-            print msg
-            f.write(msg)
+                msg = str(result.getcode()) + '[SUCCESS]'
+        url = url.replace('http://', '')
+        msg = msg + url
+        print msg
+        f.write(msg + '\n')
         f.close()
 
 
 sscan = sscan()
 # sscan.dict()
-sscan.scan('http://www.dcnepalhot.com/')
+sscan.scan('http://safe.feei.cn/admin.php')
 # sscan.search()

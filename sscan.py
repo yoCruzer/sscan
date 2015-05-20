@@ -100,7 +100,7 @@ class sscan:
         print 'TotalTime: %s' % ((time.time() - self.startTime) / 10)
 
     def get(self, url):
-        f = open('/tmp/.tmp', 'w')
+        f = open('/tmp/.tmp', 'ab')
         try:
             class NoRedirectHandler(urllib2.HTTPRedirectHandler):
                 def http_error_302(self, req, fp, code, msg, headers):
@@ -121,9 +121,9 @@ class sscan:
         except urllib2.HTTPError as e:
             msg = str(e.code) + '[ORIGIN]'
         except urllib2.URLError as e:
-            msg = e.reason
+            msg = str(e.reason)
         except Exception as e:
-            msg = e
+            msg = str(e)
         else:
             # Handle 404
             body = result.read()
@@ -145,6 +145,7 @@ class sscan:
         print msg
         f.write(msg + '\n')
         f.close()
+
 
 sscan = sscan()
 # sscan.dict()

@@ -94,19 +94,27 @@ class sscan:
         except Exception as e:
             print e
         else:
-            # Body is have 404
+            # Handle 404
             body = result.read()
-            if result.code in (300, 301, 302, 303, 307):
-                f.write(str(result.code) + '[CUSTOM]' + url + '\n')
-            elif '404' in body or '找不到' in body or '不存在' in body or '抱歉' in body or '再试' in body or '不合法' in body or '被阻断' in body or '访问禁止' in body or 'not allowed' in body:
-                f.write(str(404) + '[CUSTOM]' + url + '\n')
+            not_found = ['404', '找不到', '不存在', '抱歉', '再试', '不合法', '被阻断', '访问禁止', 'not allowed']
+            is_not_found = 0
+            for nf in not_found:
+                if nf in body:
+                    is_not_found = 1
+                    break
+            if is_not_found == 1:
+                msg = '404[CUSTOM]'
+            elif result.code in (300, 301, 302, 303, 307):
+                msg = str(result.code) + '[CUSTOM]'
             else:
-                f.write(str(result.getcode()) + url + '\n')
-                print str(result.getcode()) + url
+                msg = str(result.getcode())
+            msg = msg + url + '\n'
+            print msg
+            f.write(msg)
         f.close()
 
 
 sscan = sscan()
 # sscan.dict()
-sscan.scan('http://www.xiaomi.cn')
+sscan.scan('http://www.dcnepalhot.com/')
 # sscan.search()

@@ -8,6 +8,7 @@ SSCAN - Scan Security Tools
 
 import time
 import re
+import socket
 import urllib
 import urllib2
 
@@ -56,6 +57,7 @@ class sscan:
         '/phpmyadmin/',
         '/upload/',
         '/cacti/index.php',
+        '/FCKeditor/',
         # Test
         '/upload.html',
         '/test.html',
@@ -147,7 +149,8 @@ class sscan:
         f.close()
 
 
+socket.setdefaulttimeout(3)
 sscan = sscan()
 # sscan.dict()
-sscan.scan('http://f.mogujie.com/')
+sscan.scan('http://www.tdxinfo.com')
 # sscan.search()

@@ -2,7 +2,7 @@
 # coding:utf-8#
 
 """
-sscan - Scan Security Tools
+SSCAN - Scan Security Tools
 @author Feei <wufeifei[at]wufeifei.com>
 """
 
@@ -10,6 +10,7 @@ import time
 import re
 import urllib
 import urllib2
+
 
 class sscan:
     startTime = time.time()
@@ -76,6 +77,7 @@ class sscan:
                     infourl.status = code
                     infourl.code = code
                     return infourl
+
                 http_error_300 = http_error_302
                 http_error_301 = http_error_302
                 http_error_303 = http_error_302
@@ -94,14 +96,15 @@ class sscan:
         else:
             # Body is have 404
             body = result.read()
-            if result.code in(300, 301, 302, 303, 307):
+            if result.code in (300, 301, 302, 303, 307):
                 f.write(str(result.code) + '[CUSTOM]' + url + '\n')
-            elif '404' in body or '找不到' in body or '不存在' in body or '抱歉' in body or '再试' in body:
+            elif '404' in body or '找不到' in body or '不存在' in body or '抱歉' in body or '再试' in body or '不合法' in body or '被阻断' in body or '访问禁止' in body or 'not allowed' in body:
                 f.write(str(404) + '[CUSTOM]' + url + '\n')
             else:
                 f.write(str(result.getcode()) + url + '\n')
                 print str(result.getcode()) + url
         f.close()
+
 
 sscan = sscan()
 # sscan.dict()

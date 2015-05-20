@@ -14,32 +14,6 @@ import urllib2
 
 class sscan:
     startTime = time.time()
-    rules = [
-        '/config/config_global.php.bak',
-        '/config/config_ucenter.php.bak',
-        '/.svn/entries',
-        '/.git/config',
-        '/WEB-INF/web.xml',
-        '/config.inc.php.bak',
-        '/.config.inc.php.swp',
-        '/.index.php.swp',
-        '/config/.config_ucenter.php.swp',
-        '/cacti/index.php',
-        '/readme.txt',
-        '/data.tar',
-        '/www.tar',
-        '/www.rar',
-        '/www.tar.gz',
-        '/web.rar',
-        '/uc_server/',
-        '/phpmyadmin/',
-        '/upload/',
-        '/admin/',
-        '/invoker/JMXInvokerServlet',
-        '/admin-console/',
-        '/jmx-console/',
-        '/phpinfo.php',
-    ]
     headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.152 Safari/537.36',
         'Accept-Language': 'zh-CN,zh;q=0.8,en;q=0.6',
@@ -49,6 +23,50 @@ class sscan:
         'Referer': 'http://www.baidu.com',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
     }
+    rules = [
+        # Info
+        '/.svn/entries',
+        '/.git/config',
+        '/WEB-INF/web.xml',
+        '/config.inc.php.bak',
+        '/.config.inc.php.swp',
+        '/.index.php.swp',
+        '/phpinfo.php',
+        '/config/config_ucenter.php.bak',
+        '/config/config_global.php.bak',
+        '/config/.config_ucenter.php.swp',
+        '/config/.config_global.php.swp',
+        '/readme',
+        '/readme.md',
+        '/readme.txt',
+        # Back File
+        '/data.tar',
+        '/data.rar',
+        '/data.zip',
+        '/www.tar.gz',
+        '/www.tar',
+        '/www.rar',
+        '/www.zip',
+        '/www.tar.gz',
+        '/web.rar',
+        '/web.tar',
+        '/web.tar.gz',
+        # Component
+        '/uc_server/',
+        '/phpmyadmin/',
+        '/upload/',
+        '/cacti/index.php',
+        # Test
+        '/upload.html',
+        '/test.html',
+        '/ceshi/',
+        # Mange Dashboard
+        '/admin/',
+        '/invoker/JMXInvokerServlet',
+        '/admin-console/',
+        '/jmx-console/',
+    ]
+    success = []
 
     def search(self):
         url = 'https://www.baidu.com/s?'
@@ -65,7 +83,7 @@ class sscan:
         with open("top-cn.csv", "r") as ins:
             i = 0
             for line in ins:
-                i = i + 1
+                i += 1
                 print i
                 # print line
                 url = line.split(',')
@@ -78,6 +96,7 @@ class sscan:
         print 'TEST:' + url
         for rule in self.rules:
             self.get(url + rule)
+        print self.success
         print 'TotalTime: %s' % ((time.time() - self.startTime) / 10)
 
     def get(self, url):
@@ -102,9 +121,9 @@ class sscan:
         except urllib2.HTTPError as e:
             msg = str(e.code) + '[ORIGIN]'
         except urllib2.URLError as e:
-            print e.reason
+            msg = e.reason
         except Exception as e:
-            print e
+            msg = e
         else:
             # Handle 404
             body = result.read()
@@ -119,15 +138,15 @@ class sscan:
             elif result.code in (300, 301, 302, 303, 307):
                 msg = str(result.code) + '[CUSTOM]'
             else:
+                self.success.append(url)
                 msg = str(result.getcode()) + '[SUCCESS]'
         url = url.replace('http://', '')
-        msg = msg + url
+        msg += url
         print msg
         f.write(msg + '\n')
         f.close()
 
-
 sscan = sscan()
 # sscan.dict()
-sscan.scan('http://safe.feei.cn/admin.php')
+sscan.scan('http://f.mogujie.com/')
 # sscan.search()

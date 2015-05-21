@@ -24,6 +24,7 @@ class sscan:
         'Referer': 'http://www.baidu.com',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
     }
+    # TODO https://github.com/rootphantomer/Blasting_dictionary/blob/a680e024782cc9fb36784f009aa35657864c9f4c/%E7%9B%AE%E5%BD%95/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9%20(2)/DIR.txt
     rules = [
         # Info
         '/.svn/entries',
@@ -152,5 +153,5 @@ class sscan:
 socket.setdefaulttimeout(3)
 sscan = sscan()
 # sscan.dict()
-sscan.scan('http://www.tdxinfo.com')
+sscan.scan('http://www.mogujie.com/')
 # sscan.search()
